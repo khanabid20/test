@@ -1,0 +1,26 @@
+#####################################################################################
+# Date            Version            Change
+# 20/01/2020      4.0                updated to fetch file(s) from repo
+# 28/02/2020      4.1                registeration of version is included (current)
+#####################################################################################
+---
+
+
+- import_playbook: verifyAnt.yml
+
+- import_playbook: copyAnt.yml
+  when: '"Apache Ant(TM) version" not in output.stdout'
+
+- import_playbook: installAnt.yml
+  when: '"Apache Ant(TM) version" not in output.stdout'
+
+- import_playbook: setANTEnvVars.yml
+  when: '"Apache Ant(TM) version" not in output.stdout'
+
+- import_playbook: registerVersion_lin.yml
+  vars:
+    component_name: "ANT"
+    component_version: "{{ lookup('ini', 'ANT_VERSION section=Common_Settings file={{ configFile }}') }}"
+  tags:
+    - register
+
